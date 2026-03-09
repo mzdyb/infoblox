@@ -64,11 +64,11 @@ Ansible Automation Platform enables powerful workflow automation patterns for ma
 
 1. Edit locally host_vars YAML files (ip_spaces, subnets, zones, hosts etc.)
 2. Commit & push changes to GitHub (this repository)
-3. GitHub Actions & Webhook triggers AAP Workflow Job Template
+3. GitHub Actions & webhook triggers AAP Workflow Job Template
 
 ![Network Topology](files/cac_workflow.png)
 
-The GitHub Actions workflow (`.github/workflows/deploy-ddi.yml`) triggers automatically on push to `main` when any file under `inventory/host_vars/` changes. It detects which files changed and triggers the appropriate AAP Workflow Job Template:
+The GitHub Actions workflow (`.github/workflows/deploy-ddi.yml`) triggers automatically on push to `main` branch when any file under `inventory/host_vars/` changes. It detects which files changed and triggers the appropriate AAP Workflow Job Template:
 
 - **Infrastructure AAP Workflow** for Infrastructure changes (`ip_spaces.yml`, `dns_views.yml`, `subnets.yml`, `zones.yml`)
 - **Workload AAP Workflow** for Workload changes (`hosts.yml`)
