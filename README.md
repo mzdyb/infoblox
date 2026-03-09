@@ -70,8 +70,8 @@ Ansible Automation Platform enables powerful workflow automation patterns for ma
 
 The GitHub Actions workflow (`.github/workflows/deploy-ddi.yml`) triggers automatically on push to `main` when any file under `inventory/host_vars/` changes. It detects which files changed and triggers the appropriate AAP Workflow Job Template:
 
-- Infrastructure changes (`ip_spaces.yml`, `dns_views.yml`, `subnets.yml`, `zones.yml`) triggers the Infrastructure AAP Workflow
-- Workload changes (`hosts.yml`) triggers the Workload AAP Workflow
+- **Infrastructure AAP Workflow** for Infrastructure changes (`ip_spaces.yml`, `dns_views.yml`, `subnets.yml`, `zones.yml`)
+- **Workload AAP Workflow** for Workload changes (`hosts.yml`)
 
 If both types change in the same commit both workflows run in parallel.
 
