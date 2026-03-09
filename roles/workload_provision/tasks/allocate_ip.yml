@@ -1,0 +1,19 @@
+---
+- name: Use existing IP for {{ current_host.fqdn }}
+  ansible.builtin.set_fact:
+    allocated_ip: "{{ existing_ip }}"
+  when: host_exists
+
+- name: Allocate next available IP for {{ current_host.fqdn }}
+  when: not host_exists
+  block:
+    - name: Get next available IP from {{ current_host.network_cidr }}
+      infoblox.universal_ddi.ipam_next_available_ip_info:
+        id: "{{ subnet_id }}"
+        contiguous: false
+        count: 1
+      register: next_ip
+
+    - name: Set allocated IP
+      ansible.builtin.set_fact:
+        allocated_ip: "{{ next_ip.objects[0].address }}"

@@ -1,0 +1,30 @@
+---
+# DNS Records
+- name: Get DNS Records
+  infoblox.universal_ddi.dns_record_info: {}
+  register: dns_records
+  when: "'dns_records' in verify_scope"
+
+- name: Show DNS Records
+  ansible.builtin.debug:
+    msg: |
+      DNS Records:
+      {% for record in dns_records.objects %}
+      - {{ record.absolute_name_spec }} -> {{ record.rdata.address }} (type: {{ record.type }}, zone: {{ record.zone }})
+      {% endfor %}
+  when: "'dns_records' in verify_scope"
+
+# DHCP Reservations
+- name: Get DHCP Reservations
+  infoblox.universal_ddi.dhcp_fixed_address_info: {}
+  register: dhcp_reservations
+  when: "'dhcp_reservations' in verify_scope"
+
+- name: Show DHCP Reservations
+  ansible.builtin.debug:
+    msg: |
+      DHCP Reservations:
+      {% for reservation in dhcp_reservations.objects %}
+      - {{ reservation.address }} (mac: {{ reservation.match_value }}, space: {{ reservation.ip_space }})
+      {% endfor %}
+  when: "'dhcp_reservations' in verify_scope"

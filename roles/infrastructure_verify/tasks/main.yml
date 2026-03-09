@@ -1,0 +1,60 @@
+---
+# IP Spaces
+- name: Get IP Spaces
+  infoblox.universal_ddi.ipam_ip_space_info: {}
+  register: ip_spaces
+  when: "'ip_spaces' in verify_scope"
+
+- name: Show IP Spaces information
+  ansible.builtin.debug:
+    msg: |
+      IP Spaces:
+      {% for space in ip_spaces.objects %}
+      - {{ space.name }} (id: {{ space.id }})
+      {% endfor %}
+  when: "'ip_spaces' in verify_scope"
+
+# DNS Views
+- name: Get DNS Views
+  infoblox.universal_ddi.dns_view_info: {}
+  register: dns_views
+  when: "'dns_views' in verify_scope"
+
+- name: Show DNS Views information
+  ansible.builtin.debug:
+    msg: |
+      DNS Views:
+      {% for view in dns_views.objects %}
+      - {{ view.name }} (id: {{ view.id }})
+      {% endfor %}
+  when: "'dns_views' in verify_scope"
+
+# Subnets
+- name: Get Subnets
+  infoblox.universal_ddi.ipam_subnet_info: {}
+  register: subnets
+  when: "'subnets' in verify_scope"
+
+- name: Show Subnets information
+  ansible.builtin.debug:
+    msg: |
+      Subnets:
+      {% for subnet in subnets.objects %}
+      - {{ subnet.address }} (id: {{ subnet.id }}, space: {{ subnet.space }})
+      {% endfor %}
+  when: "'subnets' in verify_scope"
+
+# DNS Auth Zones
+- name: Get DNS Auth Zones
+  infoblox.universal_ddi.dns_auth_zone_info: {}
+  register: zones
+  when: "'zones' in verify_scope"
+
+- name: Show DNS Auth Zones information
+  ansible.builtin.debug:
+    msg: |
+      DNS Auth Zones:
+      {% for zone in zones.objects %}
+      - {{ zone.fqdn }} (id: {{ zone.id }}, view: {{ zone.view | default('N/A') }})
+      {% endfor %}
+  when: "'zones' in verify_scope"

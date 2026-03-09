@@ -1,0 +1,127 @@
+---
+# Provision infrastructure resources on Infoblox
+- name: Create IP Spaces
+  infoblox.universal_ddi.ipam_ip_space:
+    name: "{{ item.name }}"
+    comment: "{{ item.comment }}"
+    tags: "{{ item.tags }}"
+    state: present
+  loop: "{{ ip_spaces | selectattr('state', 'eq', 'present') }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: ip_space_results
+
+- name: Get IP Space IDs
+  ansible.builtin.set_fact:
+    ip_space_ids: "{{ ip_space_ids | combine({item.item.name: item.id}) }}"
+  loop: "{{ ip_space_results.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
+  when: item.id is defined
+
+- name: Create DNS Views
+  infoblox.universal_ddi.dns_view:
+    name: "{{ item.name }}"
+    comment: "{{ item.comment }}"
+    tags: "{{ item.tags }}"
+    state: present
+  loop: "{{ dns_views | selectattr('state', 'eq', 'present') }}"
+  loop_control:
+    label: "{{ item.name }}"
+  register: dns_view_results
+
+- name: Get DNS View IDs
+  ansible.builtin.set_fact:
+    dns_view_ids: "{{ dns_view_ids | combine({item.item.name: item.id}) }}"
+  loop: "{{ dns_view_results.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
+  when: item.id is defined
+
+- name: Create Subnets
+  infoblox.universal_ddi.ipam_subnet:
+    address: "{{ item.cidr }}"
+    space: "{{ ip_space_ids[item.ip_space] }}"
+    comment: "{{ item.comment }}"
+    tags: "{{ item.tags }}"
+    state: present
+  loop: "{{ subnets | selectattr('state', 'eq', 'present') }}"
+  loop_control:
+    label: "{{ item.cidr }}"
+
+- name: Create DNS Auth Zones
+  infoblox.universal_ddi.dns_auth_zone:
+    fqdn: "{{ item.fqdn }}"
+    primary_type: "{{ item.primary_type }}"
+    view: "{{ dns_view_ids[item.dns_view] }}"
+    comment: "{{ item.comment }}"
+    # tags: "{{ item.tags }}"
+    state: present
+  loop: "{{ zones | selectattr('state', 'eq', 'present') }}"
+  loop_control:
+    label: "{{ item.fqdn }}"
+
+# Deprovision infrastructure resources on Infoblox
+- name: Get existing IP Spaces
+  infoblox.universal_ddi.ipam_ip_space_info: {}
+  register: existing_ip_spaces
+
+- name: Get IP Space IDs
+  ansible.builtin.set_fact:
+    ip_space_ids: "{{ ip_space_ids | combine({item.name: item.id}) }}"
+  loop: "{{ existing_ip_spaces.objects }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Get existing DNS Views
+  infoblox.universal_ddi.dns_view_info: {}
+  register: existing_dns_views
+
+- name: Get DNS View IDs
+  ansible.builtin.set_fact:
+    dns_view_ids: "{{ dns_view_ids | combine({item.name: item.id}) }}"
+  loop: "{{ existing_dns_views.objects }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Delete DNS Auth Zones
+  infoblox.universal_ddi.dns_auth_zone:
+    fqdn: "{{ item.fqdn }}"
+    primary_type: "{{ item.primary_type }}"
+    view: "{{ dns_view_ids[item.dns_view] }}"
+    comment: "{{ item.comment }}"
+    state: absent
+  loop: "{{ zones | selectattr('state', 'eq', 'absent') }}"
+  loop_control:
+    label: "{{ item.fqdn }}"
+
+- name: Delete Subnets
+  infoblox.universal_ddi.ipam_subnet:
+    address: "{{ item.cidr }}"
+    space: "{{ ip_space_ids[item.ip_space] }}"
+    comment: "{{ item.comment }}"
+    tags: "{{ item.tags }}"
+    state: absent
+  loop: "{{ subnets | selectattr('state', 'eq', 'absent') }}"
+  loop_control:
+    label: "{{ item.cidr }}"
+
+- name: Delete DNS Views
+  infoblox.universal_ddi.dns_view:
+    name: "{{ item.name }}"
+    comment: "{{ item.comment }}"
+    tags: "{{ item.tags }}"
+    state: absent
+  loop: "{{ dns_views | selectattr('state', 'eq', 'absent') }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Delete IP Spaces
+  infoblox.universal_ddi.ipam_ip_space:
+    name: "{{ item.name }}"
+    comment: "{{ item.comment }}"
+    tags: "{{ item.tags }}"
+    state: absent
+  loop: "{{ ip_spaces | selectattr('state', 'eq', 'absent') }}"
+  loop_control:
+    label: "{{ item.name }}"

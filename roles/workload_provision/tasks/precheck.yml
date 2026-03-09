@@ -1,0 +1,48 @@
+---
+# Extract zone name and record name from FQDN
+- name: Set zone and record name facts
+  ansible.builtin.set_fact:
+    record_name: "{{ current_host.fqdn.split('.')[0] }}"
+    zone_fqdn: "{{ current_host.fqdn.split('.')[1:] | join('.') }}."
+
+# Look up the DNS zone
+- name: Look up DNS zone for {{ zone_fqdn }}
+  infoblox.universal_ddi.dns_auth_zone_info:
+    filters:
+      fqdn: "{{ zone_fqdn }}"
+  register: zone_lookup
+
+- name: Set zone ID
+  ansible.builtin.set_fact:
+    zone_id: "{{ zone_lookup.objects[0].id }}"
+
+# Look up the subnet
+- name: Look up subnet {{ current_host.network_cidr }}
+  infoblox.universal_ddi.ipam_subnet_info:
+    filters:
+      address: "{{ current_host.network_cidr }}"
+  register: subnet_lookup
+
+- name: Set subnet and IP space IDs
+  ansible.builtin.set_fact:
+    subnet_id: "{{ subnet_lookup.objects[0].id }}"
+    ip_space_id: "{{ subnet_lookup.objects[0].space }}"
+
+# Check if host DNS record already exists
+- name: Check for existing DNS record for {{ current_host.fqdn }}
+  infoblox.universal_ddi.dns_record_info:
+    filters:
+      absolute_name_spec: "{{ current_host.fqdn }}."
+      zone: "{{ zone_id }}"
+  register: existing_record
+  ignore_errors: true
+
+- name: Set host existence flag
+  ansible.builtin.set_fact:
+    host_exists: "{{ existing_record.objects | default([]) | length > 0 }}"
+
+- name: Set existing host facts
+  ansible.builtin.set_fact:
+    existing_ip: "{{ existing_record.objects[0].rdata.address }}"
+    existing_record_id: "{{ existing_record.objects[0].id }}"
+  when: host_exists

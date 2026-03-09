@@ -1,0 +1,6 @@
+---
+verify_scope:
+  - ip_spaces
+  - dns_views
+  - subnets
+  - zones

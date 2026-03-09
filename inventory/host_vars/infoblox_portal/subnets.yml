@@ -1,0 +1,13 @@
+---
+subnets:
+  - cidr: "10.100.10.0/24"
+    ip_space: "datacenter-eu-central"
+    comment: "Created by Ansible"
+    state: present
+    tags: {}
+
+  - cidr: "10.100.20.0/24"
+    ip_space: "datacenter-eu-central"
+    comment: "Created by Ansible"
+    state: present
+    tags: {}

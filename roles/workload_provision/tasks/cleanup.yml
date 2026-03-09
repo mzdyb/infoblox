@@ -1,0 +1,21 @@
+---
+- name: Remove DHCP reservation for {{ current_host.fqdn }}
+  infoblox.universal_ddi.dhcp_fixed_address:
+    address: "{{ existing_ip }}"
+    match_type: "mac"
+    match_value: "{{ current_host.mac }}"
+    ip_space: "{{ ip_space_id }}"
+    state: absent
+  when: host_exists and current_host.mac is defined and current_host.mac
+  ignore_errors: true
+
+- name: Remove DNS record for {{ current_host.fqdn }}
+  infoblox.universal_ddi.dns_record:
+    id: "{{ existing_record_id }}"
+    state: absent
+  when: host_exists
+
+- name: Host {{ current_host.fqdn }} decommissioned
+  ansible.builtin.debug:
+    msg: "Decommissioned {{ current_host.fqdn }} (IP: {{ existing_ip }})"
+  when: host_exists

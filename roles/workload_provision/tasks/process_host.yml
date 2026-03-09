@@ -1,0 +1,21 @@
+---
+- name: Run prechecks for {{ current_host.fqdn }}
+  ansible.builtin.include_tasks: precheck.yml
+
+- name: Provision {{ current_host.fqdn }}
+  when: current_host.state == 'present'
+  block:
+    - name: Allocate IP address
+      ansible.builtin.include_tasks: allocate_ip.yml
+
+    - name: Create DNS record
+      ansible.builtin.include_tasks: host_record.yml
+
+    - name: Create DHCP reservation
+      ansible.builtin.include_tasks: dhcp_reservation.yml
+
+- name: Decommission {{ current_host.fqdn }}
+  when: current_host.state == 'absent'
+  block:
+    - name: Clean up host records
+      ansible.builtin.include_tasks: cleanup.yml

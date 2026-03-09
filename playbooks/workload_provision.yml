@@ -1,0 +1,15 @@
+---
+# Provision DDI workloads (allocate IPs, create DNS records and DHCP reservations) and verify the results
+# To deprovision a workload set its state to "absent" in host_vars/hosts.yml and re-run this playbook
+
+- name: DDI Workload Provisioning
+  hosts: infoblox_portal
+
+  module_defaults:
+    group/infoblox.universal_ddi.all:
+      portal_url: "{{ portal_url | default(omit) }}"
+      api_key: "{{ api_key | default(omit) }}"
+
+  roles:
+    - workload_provision
+    - workload_verify

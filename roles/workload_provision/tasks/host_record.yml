@@ -1,0 +1,12 @@
+---
+- name: Create DNS A record for {{ current_host.fqdn }}
+  infoblox.universal_ddi.dns_record:
+    zone: "{{ zone_id }}"
+    name_in_zone: "{{ record_name }}"
+    type: "A"
+    rdata:
+      address: "{{ allocated_ip }}"
+    comment: "Provisioned via AAP"
+    tags: "{{ current_host.tags | default({}) }}"
+    state: present
+  when: not host_exists

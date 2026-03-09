@@ -1,0 +1,11 @@
+---
+- name: Verify Infoblox DDI Configuration
+  hosts: infoblox_portal
+
+  module_defaults:
+    group/infoblox.universal_ddi.all:
+      portal_url: "{{ portal_url | default(omit) }}"
+      api_key: "{{ api_key | default(omit) }}"
+
+  roles:
+    - infrastructure_verify

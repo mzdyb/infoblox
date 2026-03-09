@@ -1,0 +1,4 @@
+---
+verify_scope:
+  - dns_records
+  - dhcp_reservations

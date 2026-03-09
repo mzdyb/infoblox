@@ -1,0 +1,15 @@
+---
+# Setup DDI infrastructure (IP Spaces, DNS Views, Subnets, Zones) and verify the results
+# To deprovision resource set its state to "absent" in host_vars and re-run this playbook
+
+- name: DDI Infrastructure Setup
+  hosts: infoblox_portal
+
+  module_defaults:
+    group/infoblox.universal_ddi.all:
+      portal_url: "{{ portal_url | default(omit) }}"
+      api_key: "{{ api_key | default(omit) }}"
+
+  roles:
+    - infrastructure_setup
+    - infrastructure_verify

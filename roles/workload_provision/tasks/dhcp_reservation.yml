@@ -1,0 +1,12 @@
+---
+- name: Create DHCP reservation for {{ current_host.fqdn }}
+  infoblox.universal_ddi.dhcp_fixed_address:
+    address: "{{ allocated_ip }}"
+    match_type: "mac"
+    match_value: "{{ current_host.mac }}"
+    ip_space: "{{ ip_space_id }}"
+    name: "{{ current_host.fqdn }}"
+    comment: "Provisioned via AAP"
+    tags: "{{ current_host.tags | default({}) }}"
+    state: present
+  when: current_host.mac is defined and current_host.mac
