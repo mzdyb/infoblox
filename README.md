@@ -13,8 +13,8 @@ This project provides an example of automating Infoblox Universal DDI configurat
 
 3. **The following Ansible roles have been created:**
    - **`infrastructure_setup`:** Creates basic infrastructure: IP Spaces, DNS Views, Subnets, and DNS Zones
-   - **`workload_provision`:** Provisions hosts within that infrastructure: allocates IPs, creates DNS records and optionally creates DHCP reservations
    - **`infrastructure_verify`:** Queries and displays current DDI infrastructure (IP Spaces, DNS Views, Subnets, Zones)
+   - **`workload_provision`:** Provisions hosts within that infrastructure: allocates IPs, creates DNS records and optionally creates DHCP reservations
    - **`workload_verify`:** Queries and displays provisioned workloads (DNS records, DHCP reservations)
 
 4. **Idempotency:** Ansible playbooks are idempotent which means that Ansible only makes changes when the actual state differs from the defined state.If defined state is already configured Ansible detects it and doesn't overwrite the configuration.
