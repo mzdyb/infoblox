@@ -107,6 +107,11 @@ ServiceNow can be integrated with AAP to provide ITSM-driven host provisioning. 
    - playbook using servicenow.itsm collection to update and close ServiceNow request with provisioned host details
 
 
+### AAP Configuration as Code
+
+AAP Workflows used in this project are defined in CaC fashion in the following repo:
+https://github.com/mzdyb/aap-configuration-as-code
+
 ## Author
 
 [@mzdyb](https://www.linkedin.com/in/michal-zdyb-9aa4046/)
