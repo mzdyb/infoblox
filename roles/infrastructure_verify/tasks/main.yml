@@ -7,11 +7,16 @@
 
 - name: Show IP Spaces information
   ansible.builtin.debug:
-    msg: |
-      IP Spaces:
-      {% for space in ip_spaces.objects %}
-      - {{ space.name }} (id: {{ space.id }})
-      {% endfor %}
+    msg: "{{ space.name }}"
+  loop: "{{ ip_spaces.objects }}"
+  loop_control:
+    loop_var: space
+    label: "{{ space.name }}"
+  when: "'ip_spaces' in verify_scope"
+
+- name: Build IP space name lookup
+  ansible.builtin.set_fact:
+    ip_space_names: "{{ ip_spaces.objects | items2dict(key_name='id', value_name='name') }}"
   when: "'ip_spaces' in verify_scope"
 
 # DNS Views
@@ -22,11 +27,16 @@
 
 - name: Show DNS Views information
   ansible.builtin.debug:
-    msg: |
-      DNS Views:
-      {% for view in dns_views.objects %}
-      - {{ view.name }} (id: {{ view.id }})
-      {% endfor %}
+    msg: "{{ view.name }}"
+  loop: "{{ dns_views.objects }}"
+  loop_control:
+    loop_var: view
+    label: "{{ view.name }}"
+  when: "'dns_views' in verify_scope"
+
+- name: Build DNS view name lookup
+  ansible.builtin.set_fact:
+    dns_view_names: "{{ dns_views.objects | items2dict(key_name='id', value_name='name') }}"
   when: "'dns_views' in verify_scope"
 
 # Subnets
@@ -37,11 +47,11 @@
 
 - name: Show Subnets information
   ansible.builtin.debug:
-    msg: |
-      Subnets:
-      {% for subnet in subnets.objects %}
-      - {{ subnet.address }} (id: {{ subnet.id }}, space: {{ subnet.space }})
-      {% endfor %}
+    msg: "{{ subnet.address }} (space: {{ ip_space_names[subnet.space] | default(subnet.space) }})"
+  loop: "{{ subnets.objects }}"
+  loop_control:
+    loop_var: subnet
+    label: "{{ subnet.address }}"
   when: "'subnets' in verify_scope"
 
 # DNS Auth Zones
@@ -52,9 +62,9 @@
 
 - name: Show DNS Auth Zones information
   ansible.builtin.debug:
-    msg: |
-      DNS Auth Zones:
-      {% for zone in zones.objects %}
-      - {{ zone.fqdn }} (id: {{ zone.id }}, view: {{ zone.view | default('N/A') }})
-      {% endfor %}
+    msg: "{{ zone.fqdn }} (view: {{ dns_view_names[zone.view] | default(zone.view | default('N/A')) }})"
+  loop: "{{ zones.objects }}"
+  loop_control:
+    loop_var: zone
+    label: "{{ zone.fqdn }}"
   when: "'zones' in verify_scope"

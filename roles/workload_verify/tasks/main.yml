@@ -7,11 +7,11 @@
 
 - name: Show DNS Records
   ansible.builtin.debug:
-    msg: |
-      DNS Records:
-      {% for record in dns_records.objects %}
-      - {{ record.absolute_name_spec }} -> {{ record.rdata.address }} (type: {{ record.type }}, zone: {{ record.zone }})
-      {% endfor %}
+    msg: "{{ record.absolute_name_spec }} -> {{ record.rdata.address | default('N/A') }} (type: {{ record.type }})"
+  loop: "{{ dns_records.objects }}"
+  loop_control:
+    loop_var: record
+    label: "{{ record.absolute_name_spec }}"
   when: "'dns_records' in verify_scope"
 
 # DHCP Reservations
@@ -22,9 +22,9 @@
 
 - name: Show DHCP Reservations
   ansible.builtin.debug:
-    msg: |
-      DHCP Reservations:
-      {% for reservation in dhcp_reservations.objects %}
-      - {{ reservation.address }} (mac: {{ reservation.match_value }}, space: {{ reservation.ip_space }})
-      {% endfor %}
+    msg: "{{ reservation.address }} (mac: {{ reservation.match_value }}, space: {{ reservation.ip_space }})"
+  loop: "{{ dhcp_reservations.objects }}"
+  loop_control:
+    loop_var: reservation
+    label: "{{ reservation.address }}"
   when: "'dhcp_reservations' in verify_scope"
