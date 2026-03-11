@@ -126,7 +126,7 @@ ServiceNow can be integrated with AAP to provide ITSM-driven host provisioning. 
 
 ## AAP Configuration as Code
 
-AAP Workflows used in this project are defined in CaC fashion in the following repo:
+AAP Workflows used in this project are defined in CaC fashion in the following repo:  
 https://github.com/mzdyb/aap-configuration-as-code
 
 ## Author
