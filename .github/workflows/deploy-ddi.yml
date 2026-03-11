@@ -35,10 +35,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger AAP Infrastructure Workflow
-        run: |
-          curl -s --fail-with-body -X POST \
-            -H "Content-Type: application/json" \
-            "${{ secrets.WEBHOOK_URL_INFRA }}"
+        uses: distributhor/workflow-webhook@v3
+        with:
+          webhook_url: ${{ secrets.WEBHOOK_URL_INFRA }}
+          webhook_secret: ${{ secrets.WEBHOOK_SECRET_INFRA }}
+          verify_ssl: false
 
   deploy-workload:
     name: Deploy Workload
@@ -47,7 +48,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger AAP Workload Workflow
-        run: |
-          curl -s --fail-with-body -X POST \
-            -H "Content-Type: application/json" \
-            "${{ secrets.WEBHOOK_URL_WORKLOAD }}"
+        uses: distributhor/workflow-webhook@v3
+        with:
+          webhook_url: ${{ secrets.WEBHOOK_URL_WORKLOAD }}
+          webhook_secret: ${{ secrets.WEBHOOK_SECRET_WORKLOAD }}
+          verify_ssl: false

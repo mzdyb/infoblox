@@ -80,7 +80,9 @@ The following GitHub repository secrets must be configured:
 | Secret | Description |
 |---|---|
 | `WEBHOOK_URL_INFRA` | AAP webhook URL for the Infrastructure Workflow Job Template |
+| `WEBHOOK_SECRET_INFRA` | AAP webhook secret for the Infrastructure Workflow Job Template |
 | `WEBHOOK_URL_WORKLOAD` | AAP webhook URL for the Workload Workflow Job Template |
+| `WEBHOOK_SECRET_WORKLOAD` | AAP webhook secret for the Workload Workflow Job Template |
 
 ### Other Possible Workflows
 Depending on our needs there can be many other possible use cases for automating Infoblox with AAP. To showcase this here are two examples of workflows that aren't based on a CaC approach (not covered in this repository):
