@@ -84,10 +84,25 @@ The following GitHub repository secrets must be configured:
 | `WEBHOOK_URL_WORKLOAD` | AAP webhook URL for the Workload Workflow Job Template |
 | `WEBHOOK_SECRET_WORKLOAD` | AAP webhook secret for the Workload Workflow Job Template |
 
-### Other Possible Workflows
+### AAP Workflow Job Templates
+
+Each AAP Workflow Job Template follows the same pattern:
+
+1. **Synchronize repository** and **synchronize inventory** run in parallel (both triggered on start) to ensure AAP has the latest project code and host_vars
+2. The main job template (**setup infrastructure** or **provision workloads**) runs only after both synchronization steps succeed (ALL convergence)
+3. The verification job template (**verify infrastructure** or **verify workloads**) runs on success of the main job
+
+AAP Provision Workload Workflow:  
+![AAP Workload Workflow](files/workload_workflow.png)
+
+AAP Setup Infrastructure Workflow:  
+![AAP Infrastructure Workflow](files/infrastructure_workflow.png)
+
+
+## Other Possible Automation Use Cases
 Depending on our needs there can be many other possible use cases for automating Infoblox with AAP. To showcase this here are two examples of workflows that aren't based on a CaC approach (not covered in this repository):
 
-#### Self-Service host provisioning via AAP Survey
+### Self-Service host provisioning via AAP Survey
 
 AAP Surveys allow users to provision hosts without editing variables in yaml files. AAP job template presents a web form in browser where users fill in host details and AAP Implements hosts configuration based on provided input data. This workflow enables self-service for teams that need DNS/DHCP records etc.
 
@@ -97,7 +112,7 @@ AAP Surveys allow users to provision hosts without editing variables in yaml fil
    - workload_verify.yml
    - sent notification with provisioned host details (email, Slack/Teams etc.)
 
-#### ServiceNow-initiated host provisioning
+### ServiceNow-initiated host provisioning
 
 ServiceNow can be integrated with AAP to provide ITSM-driven host provisioning. A user submits a ServiceNow Catalog Item with host details. ServiceNow calls AAP REST API to launch a Workflow Job Template that provisions the host in Infoblox and updates the ServiceNow request with results.
 
@@ -109,7 +124,7 @@ ServiceNow can be integrated with AAP to provide ITSM-driven host provisioning. 
    - playbook using servicenow.itsm collection to update and close ServiceNow request with provisioned host details
 
 
-### AAP Configuration as Code
+## AAP Configuration as Code
 
 AAP Workflows used in this project are defined in CaC fashion in the following repo:
 https://github.com/mzdyb/aap-configuration-as-code
