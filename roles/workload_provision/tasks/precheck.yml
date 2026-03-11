@@ -16,17 +16,33 @@
   ansible.builtin.set_fact:
     zone_id: "{{ zone_lookup.objects[0].id }}"
 
+# Look up the IP space for the subnet
+- name: Set IP space name from subnet definition
+  ansible.builtin.set_fact:
+    ip_space_name: "{{ (subnets | selectattr('cidr', 'eq', current_host.network_cidr) | first).ip_space }}"
+
+- name: Look up IP space {{ ip_space_name }}
+  infoblox.universal_ddi.ipam_ip_space_info:
+    filters:
+      name: "{{ ip_space_name }}"
+  register: ip_space_lookup
+
+- name: Set IP space ID
+  ansible.builtin.set_fact:
+    ip_space_id: "{{ ip_space_lookup.objects[0].id }}"
+
 # Look up the subnet
 - name: Look up subnet {{ current_host.network_cidr }}
   infoblox.universal_ddi.ipam_subnet_info:
     filters:
-      address: "{{ current_host.network_cidr }}"
+      address: "{{ current_host.network_cidr.split('/')[0] }}"
+      cidr: "{{ current_host.network_cidr.split('/')[1] }}"
+      space: "{{ ip_space_id }}"
   register: subnet_lookup
 
-- name: Set subnet and IP space IDs
+- name: Set subnet ID
   ansible.builtin.set_fact:
     subnet_id: "{{ subnet_lookup.objects[0].id }}"
-    ip_space_id: "{{ subnet_lookup.objects[0].space }}"
 
 # Check if host DNS record already exists
 - name: Check for existing DNS record for {{ current_host.fqdn }}

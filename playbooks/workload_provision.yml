@@ -1,5 +1,5 @@
 ---
-# Provision DDI workloads (allocate IPs, create DNS records and DHCP reservations) and verify the results
+# Provision DDI workloads (allocate IPs, create DNS records and DHCP reservations)
 # To deprovision a workload set its state to "absent" in host_vars/hosts.yml and re-run this playbook
 
 - name: DDI Workload Provisioning
@@ -12,4 +12,3 @@
 
   roles:
     - workload_provision
-    - workload_verify

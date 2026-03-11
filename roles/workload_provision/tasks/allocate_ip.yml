@@ -16,4 +16,4 @@
 
     - name: Set allocated IP
       ansible.builtin.set_fact:
-        allocated_ip: "{{ next_ip.objects[0].address }}"
+        allocated_ip: "{{ next_ip.objects[0] }}"

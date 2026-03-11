@@ -11,7 +11,11 @@
 
 - name: Remove DNS record for {{ current_host.fqdn }}
   infoblox.universal_ddi.dns_record:
-    id: "{{ existing_record_id }}"
+    zone: "{{ zone_id }}"
+    type: "A"
+    rdata:
+      address: "{{ existing_ip }}"
+    name_in_zone: "{{ record_name }}"
     state: absent
   when: host_exists
 

@@ -1,5 +1,5 @@
 ---
-# Setup DDI infrastructure (IP Spaces, DNS Views, Subnets, Zones) and verify the results
+# Setup DDI infrastructure (IP Spaces, DNS Views, Subnets, Zones)
 # To deprovision resource set its state to "absent" in host_vars and re-run this playbook
 
 - name: DDI Infrastructure Setup
@@ -12,4 +12,3 @@
 
   roles:
     - infrastructure_setup
-    - infrastructure_verify

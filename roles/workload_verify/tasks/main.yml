@@ -20,9 +20,19 @@
   register: dhcp_reservations
   when: "'dhcp_reservations' in verify_scope"
 
+- name: Get IP Spaces for name resolution
+  infoblox.universal_ddi.ipam_ip_space_info: {}
+  register: ip_spaces_lookup
+  when: "'dhcp_reservations' in verify_scope"
+
+- name: Build IP space name map
+  ansible.builtin.set_fact:
+    ip_space_names: "{{ ip_spaces_lookup.objects | items2dict(key_name='id', value_name='name') }}"
+  when: "'dhcp_reservations' in verify_scope"
+
 - name: Show DHCP Reservations
   ansible.builtin.debug:
-    msg: "{{ reservation.address }} (mac: {{ reservation.match_value }}, space: {{ reservation.ip_space }})"
+    msg: "{{ reservation.address }} (mac: {{ reservation.match_value }}, space: {{ ip_space_names[reservation.ip_space] }})"
   loop: "{{ dhcp_reservations.objects }}"
   loop_control:
     loop_var: reservation

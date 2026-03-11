@@ -1,0 +1,53 @@
+---
+name: Deploy DDI Configuration
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'inventory/host_vars/**'
+
+jobs:
+  detect-changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      infrastructure: ${{ steps.filter.outputs.infrastructure }}
+      workload: ${{ steps.filter.outputs.workload }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            infrastructure:
+              - 'inventory/host_vars/**/ip_spaces.yml'
+              - 'inventory/host_vars/**/dns_views.yml'
+              - 'inventory/host_vars/**/subnets.yml'
+              - 'inventory/host_vars/**/zones.yml'
+            workload:
+              - 'inventory/host_vars/**/hosts.yml'
+
+  deploy-infrastructure:
+    name: Deploy Infrastructure
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.infrastructure == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger AAP Infrastructure Workflow
+        run: |
+          curl -s --fail-with-body -X POST \
+            -H "Content-Type: application/json" \
+            "${{ secrets.WEBHOOK_URL_INFRA }}"
+
+  deploy-workload:
+    name: Deploy Workload
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.workload == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger AAP Workload Workflow
+        run: |
+          curl -s --fail-with-body -X POST \
+            -H "Content-Type: application/json" \
+            "${{ secrets.WEBHOOK_URL_WORKLOAD }}"
