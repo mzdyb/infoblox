@@ -11,3 +11,9 @@ subnets:
     comment: "Created by Ansible"
     state: absent
     tags: {}
+
+  - cidr: "10.100.30.0/24"
+    ip_space: "datacenter-eu-central"
+    comment: "Created by Ansible"
+    state: absent
+    tags: {}
