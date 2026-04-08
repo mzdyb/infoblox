@@ -4,18 +4,18 @@ zones:
     dns_view: "corporate"
     primary_type: "cloud"
     comment: "Created by Ansible"
-    state: present
+    state: absent
     # tags: {}
 
   - fqdn: "corp1.example.com."
     dns_view: "corporate"
     primary_type: "cloud"
     comment: "Created by Ansible"
-    state: present
+    state: absent
 
   - fqdn: "guest.example.com."
     dns_view: "guest"
     primary_type: "cloud"
     comment: "Created by Ansible"
-    state: present
+    state: absent
     # tags: {}
