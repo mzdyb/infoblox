@@ -7,6 +7,12 @@ zones:
     state: present
     # tags: {}
 
+  - fqdn: "corp1.example.com."
+    dns_view: "corporate"
+    primary_type: "cloud"
+    comment: "Created by Ansible"
+    state: present
+
   - fqdn: "guest.example.com."
     dns_view: "guest"
     primary_type: "cloud"
