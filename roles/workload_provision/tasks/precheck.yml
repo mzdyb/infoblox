@@ -14,7 +14,7 @@
 
 - name: Set zone ID
   ansible.builtin.set_fact:
-    zone_id: "{{ zone_lookup.objects[0].id }}"
+    zone_id: "{{ zone_lookup.objects[0].id | default('') }}"
 
 # Look up the IP space for the subnet
 - name: Set IP space name from subnet definition
@@ -29,9 +29,9 @@
 
 - name: Set IP space ID
   ansible.builtin.set_fact:
-    ip_space_id: "{{ ip_space_lookup.objects[0].id }}"
+    ip_space_id: "{{ ip_space_lookup.objects[0].id | default('') }}"
 
-# Look up the subnet
+# Look up the subnet (only needed for provisioning)
 - name: Look up subnet {{ current_host.network_cidr }}
   infoblox.universal_ddi.ipam_subnet_info:
     filters:
@@ -39,10 +39,12 @@
       cidr: "{{ current_host.network_cidr.split('/')[1] }}"
       space: "{{ ip_space_id }}"
   register: subnet_lookup
+  when: current_host.state == 'present'
 
 - name: Set subnet ID
   ansible.builtin.set_fact:
     subnet_id: "{{ subnet_lookup.objects[0].id }}"
+  when: current_host.state == 'present'
 
 # Check if host DNS record already exists
 - name: Check for existing DNS record for {{ current_host.fqdn }}
@@ -52,10 +54,11 @@
       zone: "{{ zone_id }}"
   register: existing_record
   ignore_errors: true
+  when: zone_id != ''
 
 - name: Set host existence flag
   ansible.builtin.set_fact:
-    host_exists: "{{ existing_record.objects | default([]) | length > 0 }}"
+    host_exists: "{{ (existing_record.objects | default([]) | length > 0) if zone_id != '' else false }}"
 
 - name: Set existing host facts
   ansible.builtin.set_fact:
