@@ -2,10 +2,10 @@
 dns_views:
   - name: "corporate"
     comment: "Created by Ansible"
-    state: absent
+    state: present
     tags: {}
 
   - name: "guest"
     comment: "Created by Ansible"
-    state: absent
+    state: present
     tags: {}
