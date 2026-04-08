@@ -64,7 +64,13 @@ Ansible Automation Platform enables powerful workflow automation patterns for ma
 
 1. Edit locally host_vars YAML files (ip_spaces, subnets, zones, hosts etc.)
 2. Commit & push changes to GitHub (this repository)
-3. GitHub Actions & webhook triggers AAP Workflow Job Template
+3. Run the appropriate AAP Workflow Job Template
+
+There are two options for triggering the AAP workflow:
+
+**Option 1: Manual trigger (simpler)** - After pushing changes to GitHub manually launch the appropriate Workflow Job Template from the AAP UI. This gives more mannual control over when and in what order workflows run.
+
+**Option 2: Webhook trigger (advanced)** - Use GitHub Actions with webhooks to automatically trigger the AAP workflow on push. This approach is shown below and used in this project.
 
 ![Network Topology](files/cac_workflow.png)
 
