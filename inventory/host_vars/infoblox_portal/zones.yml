@@ -19,3 +19,9 @@ zones:
     comment: "Created by Ansible"
     state: present
     # tags: {}
+
+  - fqdn: "guest1.example.com."
+    dns_view: "guest"
+    primary_type: "cloud"
+    comment: "Created by Ansible"
+    state: present
