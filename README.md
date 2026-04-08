@@ -99,7 +99,7 @@ AAP Setup Infrastructure Workflow:
 ![AAP Infrastructure Workflow](files/infrastructure_workflow.png)
 
 
-## Other Possible Automation Use Cases
+## Other Possible Infoblox Automation Use Cases
 Depending on our needs there can be many other possible use cases for automating Infoblox with AAP. To showcase this here are two examples of workflows that aren't based on a CaC approach (not covered in this repository):
 
 ### Self-Service host provisioning via AAP Survey
