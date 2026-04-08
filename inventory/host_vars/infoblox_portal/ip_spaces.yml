@@ -2,10 +2,10 @@
 ip_spaces:
   - name: "datacenter-eu-central"
     comment: "Created by Ansible"
-    state: absent
+    state: present
     tags: {}
 
   - name: "datacenter-eu-east"
     comment: "Created by Ansible"
-    state: absent
+    state: present
     tags: {}

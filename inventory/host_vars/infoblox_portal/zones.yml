@@ -4,12 +4,12 @@ zones:
     dns_view: "corporate"
     primary_type: "cloud"
     comment: "Created by Ansible"
-    state: absent
+    state: present
     # tags: {}
 
   - fqdn: "guest.example.com."
     dns_view: "guest"
     primary_type: "cloud"
     comment: "Created by Ansible"
-    state: absent
+    state: present
     # tags: {}
