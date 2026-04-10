@@ -5,7 +5,6 @@ zones:
     primary_type: "cloud"
     comment: "Created by Ansible"
     state: absent
-    # tags: {}
 
   - fqdn: "corp1.example.com."
     dns_view: "corporate"
@@ -14,13 +13,6 @@ zones:
     state: absent
 
   - fqdn: "guest.example.com."
-    dns_view: "guest"
-    primary_type: "cloud"
-    comment: "Created by Ansible"
-    state: absent
-    # tags: {}
-
-  - fqdn: "guest1.example.com."
     dns_view: "guest"
     primary_type: "cloud"
     comment: "Created by Ansible"
