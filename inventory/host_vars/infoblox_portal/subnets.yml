@@ -3,23 +3,17 @@ subnets:
   - cidr: "10.100.10.0/24"
     ip_space: "datacenter-eu-central"
     comment: "Created by Ansible"
-    state: present
+    state: absent
     tags: {}
 
   - cidr: "10.100.20.0/24"
     ip_space: "datacenter-eu-central"
     comment: "Created by Ansible"
-    state: present
+    state: absent
     tags: {}
 
-  - cidr: "10.100.30.0/24"
-    ip_space: "datacenter-eu-central"
+  - cidr: "20.100.10.0/24"
+    ip_space: "datacenter-eu-east"
     comment: "Created by Ansible"
-    state: present
-    tags: {}
-
-  - cidr: "10.100.40.0/24"
-    ip_space: "datacenter-eu-central"
-    comment: "Created by Ansible"
-    state: present
+    state: absent
     tags: {}
