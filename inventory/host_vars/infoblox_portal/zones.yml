@@ -17,3 +17,10 @@ zones:
     primary_type: "cloud"
     comment: "Created by Ansible"
     state: present
+
+  - fqdn: "guest1.example.com."
+    dns_view: "guest"
+    primary_type: "cloud"
+    comment: "Created by Ansible"
+    state: present
+    
