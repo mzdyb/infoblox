@@ -44,11 +44,11 @@ fields:
   - id: infoblox_portal_api_key
     type: string
     label: Infoblox Portal API Key
-    secret: false
+    secret: true
   - id: infoblox_portal_url
     type: string
     label: Infoblox Portal URL
-    secret: true
+    secret: false
 ```
 **Injector configuration:**
 ```
