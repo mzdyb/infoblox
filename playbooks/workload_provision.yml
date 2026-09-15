@@ -7,8 +7,8 @@
 
   module_defaults:
     group/infoblox.universal_ddi.all:
-      portal_url: "{{ portal_url | default(omit) }}"
-      api_key: "{{ api_key | default(omit) }}"
+      portal_url: "{{ infoblox_portal_url | default(omit) }}"
+      api_key: "{{ infoblox_portal_api_key | default(omit) }}"
 
   roles:
     - workload_provision
