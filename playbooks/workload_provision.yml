@@ -10,5 +10,27 @@
       portal_url: "{{ portal_url | default(omit) }}"
       api_key: "{{ api_key | default(omit) }}"
 
+  vars:
+    default_zone: "corp.example.com"
+    site_map:
+      datacenter-eu-central: "eu-central-1"
+      datacenter-eu-east: "eu-east-1"
+
+  pre_tasks:
+    - name: Build host entry from ServiceNow request
+      ansible.builtin.set_fact:
+        hosts:
+          - fqdn: "{{ snow_hostname }}.{{ default_zone }}"
+            network_cidr: "{{ snow_network_cidr }}"
+            mac: "{{ snow_mac }}"
+            state: present
+            tags:
+              Owner: "{{ snow_owner }}"
+              App: "{{ snow_app | default('unassigned', true) }}"
+              Ticket: "{{ snow_ritm_number }}"
+              Site: "{{ site_map[(subnets | selectattr('cidr', 'eq', snow_network_cidr) | list | first | default({})).ip_space | default('')] | default('unknown') }}"
+              Lifecycle: "active"
+      when: snow_ritm_number is defined
+
   roles:
     - workload_provision
